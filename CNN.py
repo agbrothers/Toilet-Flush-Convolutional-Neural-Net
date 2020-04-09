@@ -132,7 +132,7 @@ model.add(MaxPooling1D(pool_size=pool))
 model.add(Dropout(0.1))
 model.add(Flatten())
 
-# FC Layer
+# FULLY CONNECTED LAYER
 model.add(Dense(64*64))
 model.add(Activation('relu'))
 model.add(BatchNormalization())

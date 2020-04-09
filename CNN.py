@@ -24,19 +24,16 @@ from keras import backend as K
 from PIL import Image
 
 
-# initialize the number of epochs to train for, initial learning rate,
-# batch size, and image dimensions
+# Initialize main parameters
 EPOCHS = 100
 INIT_LR = 1e-3
 BS = 32
 IMAGE_DIMS = (2000/4, 256/4, 1)
-
-# initialize the data and labels
 data = []
 labels = []
-print('LOADING DATA...')
 
 """ LOAD THE IMAGES """
+print('LOADING DATA...')
 directory = '/Users/greysonbrothers/Desktop/ /- python/- data science/PROJECTS/- Neural Networks/TOILET PROJECT/training_images/'
 for folder in os.listdir(directory):
     if folder in ['.DS_Store']:

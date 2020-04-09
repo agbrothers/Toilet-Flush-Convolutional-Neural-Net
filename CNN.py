@@ -1,4 +1,3 @@
-# set the matplotlib backend so figures can be saved in the background
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns

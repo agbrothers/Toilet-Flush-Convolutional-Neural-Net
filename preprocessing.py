@@ -11,8 +11,15 @@ import random
 from PIL import Image  
 import PIL  
 
+"""
+This algorithm augments the data set by creating 3 copies of each audio file with varying levels of noise and generates
+several additional copies where the audio files are psuedo-randomly translated with respect to their time axis.  
 
-# Functions
+Then features are extracted using mel spectrograms, or MFCC.  Each MFCC is then saved as a jpg and stored in a new
+directory to be used by the CNN
+"""
+
+# Utils
 def center(arr):
     mn = np.min(arr)
     return(arr-mn)
@@ -82,7 +89,6 @@ def processAudio(file, path):
     audio1 = nr.reduce_noise(audio, findNoise(audio), verbose=False) # de-noised most
     audio2 = nr.reduce_noise(audio, findNoise(audio)/1.5, verbose=False) # de-noised less
     audio3 = nr.reduce_noise(audio, findNoise(audio)/2, verbose=False) # de-noised least
-    
     # Augment the audio by translating each sample wrt the time axis
     audio = translate(audio1) + translate(audio2) + translate(audio3)
     
@@ -90,7 +96,6 @@ def processAudio(file, path):
     n_mels = 257
     k = 0
     path = path.replace('.' + path.split('.')[-1],'')
-    
     for clip in audio:
         mel = librosa.feature.melspectrogram(clip, sr=sr, n_fft=2048, hop_length=int(clip.shape[0]/2000), n_mels=n_mels)
         mel = librosa.power_to_db(mel, ref=np.max)
@@ -103,18 +108,15 @@ def processAudio(file, path):
     return()
 
 
-""" TRIM & REDUCE NOISE, THEN FOURIER TRANSFORM, FLATTEN, AND STORE AS JPG's """
-
+""" MAIN """
 directory = r'UrbanSound/data/'
 image_dir = r'training_images/'
 labels = ['air_conditioner','car_horn','children_playing','dog_bark','drilling','engine_idling','gun_shot','jackhammer','siren','street_music']
-
 master_df = pd.DataFrame()
 
 for folder in os.listdir(directory):
     if folder == '.DS_Store':
         continue
-    
     k = 0
     #folder = 'toilet'
     for file in os.listdir(directory + '/' + folder + '/'):
@@ -123,8 +125,4 @@ for folder in os.listdir(directory):
         path = directory + '/' + folder + '/' + file   
         image_path = image_dir + folder + '/' + file
         processAudio(path, image_path)
-        
         k+=1
-        print(folder, k)
-        
-        

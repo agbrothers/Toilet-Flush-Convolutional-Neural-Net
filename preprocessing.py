@@ -13,7 +13,7 @@ import PIL
 
 """
 This algorithm augments the data set by creating 3 copies of each audio file with varying levels of noise and generates
-several additional copies where the audio files are psuedo-randomly translated with respect to their time axis.  
+several additional copies where the audio files are psuedo-randomly translated accross their time axes.  
 
 Then features are extracted using mel spectrograms, or MFCC.  Each MFCC is then saved as a jpg and stored in a new
 directory to be used by the CNN

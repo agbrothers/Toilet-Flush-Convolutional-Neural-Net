@@ -155,7 +155,7 @@ correct = [(np.argmax(y_test[i])== np.argmax(result[i])) for i in range(len(y_te
 acc = round(100*sum(correct)/len(correct), 2)
 print("Accuracy: ", round(acc, 2), "%", sep='')
 
-""" PLOT CONFUSION MATRIX """
+# Plot confusion matrix
 y_pred = [np.argmax(i) for i in result]
 y_pred = pd.DataFrame(encoder.inverse_transform(y_pred))
 conf_mat = confusion_matrix(Y_test, y_pred, labels=encoder.classes_)

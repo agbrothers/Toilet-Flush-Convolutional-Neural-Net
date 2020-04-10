@@ -155,11 +155,11 @@ correct = [(np.argmax(y_test[i])== np.argmax(result[i])) for i in range(len(y_te
 acc = round(100*sum(correct)/len(correct), 2)
 print("Accuracy: ", round(acc, 2), "%", sep='')
 
-# Plot confusion matrix
+# Plot Confusion Matrix
 y_pred = [np.argmax(i) for i in result]
 y_pred = pd.DataFrame(encoder.inverse_transform(y_pred))
 conf_mat = confusion_matrix(Y_test, y_pred, labels=encoder.classes_)
-conf_mat = [np.around(i/sum(i),2) for i in conf_mat]  # normalize entries
+conf_mat = np.array([np.around(i/sum(i),2) for i in conf_mat])  # normalize entries
 fig, ax = plt.subplots(figsize=(9,8))
 ax = sns.heatmap(conf_mat, cmap='Blues', annot=True, xticklabels=encoder.classes_, yticklabels=encoder.classes_)
 ax.tick_params(labelsize=6)
@@ -167,6 +167,12 @@ plt.title('2 Accuracy: ' + str(acc))
 plt.xlabel('Predictions')
 plt.ylabel('True Values')
 plt.tight_layout()
+
+# Print Recall & Precision Metrics
+recall = np.mean([row[i]/sum(row) for i,row in enumerate(conf_mat)])
+precision = np.mean([row[i]/sum(row) for i,row in enumerate(conf_mat.T)])
+print('Avg Recall: ', recall)
+print('Avg Precision: ', precision)
 
 # Plot training & validation accuracy values
 fig1 = plt.figure(figsize=(6,8))

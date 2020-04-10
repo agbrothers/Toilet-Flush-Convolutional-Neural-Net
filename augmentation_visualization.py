@@ -9,8 +9,9 @@ import noisereduce as nr
 
 """
 A series of functions to help visualize how each individual audio file is augmented to produce
-significantly more training data for the model to work with and test on.  Note: Includes lots of 
-plots and not a lot of cleanliness or optimization
+significantly more training data for the model to work with and test on.  Used for conceptually
+understanding and manipulating the dataset, not a component of the overall model. Note: Includes 
+lots of plots and not a lot of cleanliness or optimization
 """
 
 def center(arr):

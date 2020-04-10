@@ -1,6 +1,6 @@
 # Toilet-Flush-Convolutional-Neural-Net
 
-Constructing a convolutional neural network to classify audio files as being one of 
+Constructed a convolutional neural network to classify audio files as being one of 
 the classes [toilet, urinal, sink, unknown].  First a test model was built and trained 
 on an environmental audio dataset called UrbanSounds with 11 sound classes, and a 
 classification accuracy of 96.84% was eventually achieved.  The model was built using 

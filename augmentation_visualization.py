@@ -7,8 +7,11 @@ import random
 import librosa
 import noisereduce as nr
 
-
-""" Lots of plotting to help visualize & improve the quality of our input """
+"""
+A series of functions to help visualize how each individual audio file is augmented to produce
+significantly more training data for the model to work with and test on.  Note: Includes lots of 
+plots and not a lot of cleanliness or optimization
+"""
 
 def center(arr):
     mn = np.min(arr)
@@ -20,7 +23,7 @@ def minMaxNormalize(arr):
     return((arr-mn) / (mx-mn))
 
 def findNoise(audio, mn=0):
-    # Split the audio clip into 8 even intervals
+    # Split the audio clip over 20 even intervals
     step_size = int(audio.shape[0]/20)
     intervals = [[i, i + step_size] for i in range(0, audio.shape[0] - step_size, step_size)]
     
@@ -30,14 +33,12 @@ def findNoise(audio, mn=0):
     noise = audio[noisy_part[0]:noisy_part[1]]
     return(noise)
 
-    
-def plot_MEL_spectrogram(file):
+
+def plot_noise_reduction(file):
     if file == '.DS_Store':
         return()
-    
     audio,sr = librosa.load(file)
-
-    step_size = int(audio.shape[0]/20)
+    step_size = int(audio.shape[0]/10)
     intervals = [[i, i + step_size] for i in range(0, audio.shape[0] - step_size, step_size)]
     std = [np.std(center(audio[i[0]:i[1]])) for i in intervals]
     noise_interval_1 = intervals[np.argmin(std)]
@@ -135,12 +136,10 @@ def plot_MEL_spectrogram(file):
 
     plt.tight_layout()
     
-
     
-def plotly(file):
+def plot_translations(file):
     if file == '.DS_Store':
         return()
-    
     audio,sr = librosa.load(file)
     audio = nr.reduce_noise(audio, findNoise(audio), verbose=False)
 
@@ -233,8 +232,8 @@ while k < num_samples:
     file = os.listdir(directory + label)[index]
     
     path = directory + label + file
-    #plot_MEL_spectrogram(path)
-    plotly(path)
+    plot_noise_reduction(path)
+    plot_translations(path)
     
     #plot_MEL_spectrogram('UrbanSound/data/air_conditioner/63724.wav')    
     k+=1

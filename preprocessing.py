@@ -29,7 +29,7 @@ def minMaxNormalize(arr):
     mx = np.max(arr)
     return((arr-mn) / (mx-mn))
 
-def findNoise(audio):
+def find_noise(audio):
     # Split the audio clip into 8 even intervals
     step_size = int(audio.shape[0]/12)
     intervals = [[i, i + step_size] for i in range(0, audio.shape[0] - step_size, step_size)]
@@ -73,7 +73,7 @@ def translate(audio, n = 616500):
         translations.append(np.concatenate((np.zeros(int(shift)), audio,  np.zeros(padding-int(shift)))))
     return(translations)
 
-def processAudio(file, path):
+def process_audio(file, path):
     audio,sr = librosa.load(file) # raw audio file
 
     # trim long audio clips, add silence to short audio clips    
@@ -86,9 +86,9 @@ def processAudio(file, path):
         audio = audio[:n-1]
     
     # Augment the audio with varying levels of noise
-    audio1 = nr.reduce_noise(audio, findNoise(audio), verbose=False) # de-noised most
-    audio2 = nr.reduce_noise(audio, findNoise(audio)/1.5, verbose=False) # de-noised less
-    audio3 = nr.reduce_noise(audio, findNoise(audio)/2, verbose=False) # de-noised least
+    audio1 = nr.reduce_noise(audio, find_noise(audio), verbose=False) # de-noised most
+    audio2 = nr.reduce_noise(audio, find_noise(audio)/1.5, verbose=False) # de-noised less
+    audio3 = nr.reduce_noise(audio, find_noise(audio)/2, verbose=False) # de-noised least
     # Augment the audio by translating each sample wrt the time axis
     audio = translate(audio1) + translate(audio2) + translate(audio3)
     
@@ -107,22 +107,18 @@ def processAudio(file, path):
         k+=1
     return()
 
-
-""" MAIN """
-directory = r'UrbanSound/data/'
-image_dir = r'training_images/'
-labels = ['air_conditioner','car_horn','children_playing','dog_bark','drilling','engine_idling','gun_shot','jackhammer','siren','street_music']
-master_df = pd.DataFrame()
-
-for folder in os.listdir(directory):
-    if folder == '.DS_Store':
-        continue
-    k = 0
-    #folder = 'toilet'
-    for file in os.listdir(directory + '/' + folder + '/'):
-        if file == '.DS_Store' or (folder == 'siren' and k<57):
-            continue
-        path = directory + '/' + folder + '/' + file   
-        image_path = image_dir + folder + '/' + file
-        processAudio(path, image_path)
-        k+=1
+def preprocess_dataset(audio_dir, image_dir):
+    for folder in os.listdir(audio_dir):
+            if folder != '.DS_Store':
+                for file in os.listdir(audio_dir + '/' + folder + '/'):
+                    if file != '.DS_Store':
+                        path = audio_dir + '/' + folder + '/' + file   
+                        image_path = image_dir + folder + '/' + file
+                        process_audio(path, image_path)
+                    
+                    
+if __name__ == "__main__":
+    audio_dir = 'UrbanSound/data/'
+    image_dir = 'training_images/'
+    preprocess_dataset(audio_dir,image_dir)
+    

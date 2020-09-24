@@ -89,8 +89,9 @@ def process_audio(file, path):
     audio2 = nr.reduce_noise(audio, find_noise(audio)/1.5, verbose=False) # de-noised less
     audio3 = nr.reduce_noise(audio, find_noise(audio)/2, verbose=False) # de-noised least
     # Augment the audio by translating each sample wrt the time axis
-    audio = translate(audio1) + translate(audio2) + translate(audio3)
-    
+    translate(audio1)
+    translate(audio2)
+    translate(audio3)
     # Convert each audio file into a Mel Spectrogram and save it
     path = path.replace('.' + path.split('.')[-1],'')
     for k,clip in enumerate(audio):
@@ -98,6 +99,7 @@ def process_audio(file, path):
         mel_transform(image_path)
         print(k)
 
+        
 def preprocess_dataset(audio_dir, image_dir):
     for folder in os.listdir(audio_dir):
             if folder != '.DS_Store':

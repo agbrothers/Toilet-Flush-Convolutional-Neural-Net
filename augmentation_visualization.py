@@ -219,23 +219,24 @@ def plot_translations(file):
     plt.tight_layout()
 
     
-""" SAMPLE RANDOM AUDIO FILES """
-directory = r'UrbanSound/data/'
-folders = ['air_conditioner','car_horn','children_playing','dog_bark','drilling','engine_idling','gun_shot','jackhammer','siren','street_music']
+if __name__ == "__main__":
+    
+    """ SAMPLE RANDOM AUDIO FILES """
+    directory = r'UrbanSound/data/'
+    folders = ['air_conditioner','car_horn','children_playing','dog_bark','drilling','engine_idling','gun_shot','jackhammer','siren','street_music']
 
-# Plot the noise reduction of three random audio clips from the directory
-num_samples = 1
-k = 0
-while k < num_samples:
-    label = random.choice(folders) + '/'
-    label = 'toilet/'
-    index = random.randint(0, len(os.listdir(directory + label))-1)
-    file = os.listdir(directory + label)[index]
-    
-    path = directory + label + file
-    plot_noise_reduction(path)
-    plot_translations(path)
-    
-    #plot_MEL_spectrogram('UrbanSound/data/air_conditioner/63724.wav')    
-    k+=1
-    
+    # Plot the noise reduction of three random audio clips from the directory
+    num_samples = 1
+    k = 0
+    while k < num_samples:
+        label = random.choice(folders) + '/'
+        label = 'toilet/'
+        index = random.randint(0, len(os.listdir(directory + label))-1)
+        file = os.listdir(directory + label)[index]
+
+        path = directory + label + file
+        plot_noise_reduction(path)
+        plot_translations(path)
+
+        #plot_MEL_spectrogram('UrbanSound/data/air_conditioner/63724.wav')    
+        k+=1

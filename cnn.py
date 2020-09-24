@@ -1,9 +1,7 @@
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
-import argparse
 import random
 import os
 from sklearn.preprocessing import LabelBinarizer, LabelEncoder
@@ -11,13 +9,9 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import confusion_matrix
 from keras.models import Sequential
 from keras.layers.normalization import BatchNormalization
-from keras.layers.convolutional import Conv1D
-from keras.layers.convolutional import MaxPooling1D
+from keras.layers.convolutional import Conv1D, MaxPooling1D
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers.core import Activation
-from keras.layers.core import Flatten
-from keras.layers.core import Dropout
-from keras.layers.core import Dense
+from keras.layers.core import Activation,Flatten,Dropout,Dense
 from keras.optimizers import Adam
 from keras.utils import np_utils
 from keras import backend as K

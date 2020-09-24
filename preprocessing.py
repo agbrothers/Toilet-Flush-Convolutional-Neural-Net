@@ -12,7 +12,7 @@ from PIL import Image
 import PIL  
 
 """
-This algorithm augments the data set by creating 3 copies of each audio file with varying levels of noise and generates
+This script augments the data set by creating 3 copies of each audio file with varying levels of noise and generates
 several additional copies where the audio files are psuedo-randomly translated accross their time axes.  
 
 Then features are extracted using mel spectrograms, or MFCC.  Each MFCC is then saved as a jpg and stored in a new
@@ -66,25 +66,28 @@ def translate(audio, n = 616500):
     for i in range(num_partitions):
         k = partition[i]
         rand = random.uniform(-0.4,0.4)
-        if i != 0 and i != num_partitions-1:
-            shift = k + partition[1]*rand
-        else:
-            shift = k
+        shift = k + partition[1]*rand if (i != 0 and i != num_partitions-1) else k
         translations.append(np.concatenate((np.zeros(int(shift)), audio,  np.zeros(padding-int(shift)))))
     return(translations)
 
+def mel_transform(image_path, n_mels=256):
+    mel = librosa.feature.melspectrogram(clip, sr=sr, n_fft=2048, hop_length=int(clip.shape[0]/2000), n_mels=n_mels)
+    mel = librosa.power_to_db(mel, ref=np.max)
+    mel = minMaxNormalize(mel)
+    mel = mel[0:256,0:2000]  #shape is 256 x 2000
+    save_spectrogram(mel, image_path) # save a black & white version of the spectrogram
+    return(mel)
+
 def process_audio(file, path):
     audio,sr = librosa.load(file) # raw audio file
-
     # trim long audio clips, add silence to short audio clips    
-    n = 616500 # correspondw to approx 30 seconds, 1 sec ~ 20550 n
+    n = 616500 # corresponds to approx 30 seconds, 1 sec ~ 20550 n
     if audio.shape[0] >= 4*n:  # ignore all files > 2 mins
         print(f'Skipped, clip was {audio.shape[0]/(2*n)} mins long')
         return()
     elif audio.shape[0] >= n:
         audio,_ = librosa.effects.trim(audio, top_db=20, frame_length=512, hop_length=64)
         audio = audio[:n-1]
-    
     # Augment the audio with varying levels of noise
     audio1 = nr.reduce_noise(audio, find_noise(audio), verbose=False) # de-noised most
     audio2 = nr.reduce_noise(audio, find_noise(audio)/1.5, verbose=False) # de-noised less
@@ -93,19 +96,11 @@ def process_audio(file, path):
     audio = translate(audio1) + translate(audio2) + translate(audio3)
     
     # Convert each audio file into a Mel Spectrogram and save it
-    n_mels = 257
-    k = 0
     path = path.replace('.' + path.split('.')[-1],'')
-    for clip in audio:
-        mel = librosa.feature.melspectrogram(clip, sr=sr, n_fft=2048, hop_length=int(clip.shape[0]/2000), n_mels=n_mels)
-        mel = librosa.power_to_db(mel, ref=np.max)
-        mel = minMaxNormalize(mel)
-        mel = mel[0:258,0:2000]  #shape is 257 x 2000
+    for k,clip in enumerate(audio):
         image_path = path + f'-{k}.jpg'
+        mel_transform(image_path)
         print(k)
-        save_spectrogram(mel, image_path) # save a black & white version of the spectrogram
-        k+=1
-    return()
 
 def preprocess_dataset(audio_dir, image_dir):
     for folder in os.listdir(audio_dir):

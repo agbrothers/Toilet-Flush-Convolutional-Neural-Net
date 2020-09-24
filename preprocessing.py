@@ -11,13 +11,9 @@ import random
 from PIL import Image  
 import PIL  
 
-"""
-This script augments the data set by creating 3 copies of each audio file with varying levels of noise and generates
-several additional copies where the audio files are psuedo-randomly translated accross their time axes.  
+# This script augments the data set by creating 3 copies of each audio file with varying levels of noise and 
+# psuedo-random translation along the time axes.  
 
-Then features are extracted using mel spectrograms, or MFCC.  Each MFCC is then saved as a jpg and stored in a new
-directory to be used by the CNN
-"""
 
 # Utils
 def center(arr):

@@ -49,7 +49,7 @@ def save_model(model, name):
 def build_model(num_classes, input_dim=(500, 64, 1), epochs=100, bs=32, lr=1e-3, init='normal'):
     #1 CONV => CONV => POOL
     model = Sequential()
-    model.add(Conv1D(64, 3, padding='same', activation='relu', input_shape=input_dim))
+    model.add(Conv1D(64, 3, padding='same', activation='tanh', input_shape=input_dim))
     model.add(BatchNormalization(axis=-1))
     model.add(Conv1D(64, 3, padding='same', activation='relu'))
     model.add(BatchNormalization(axis=-1))
